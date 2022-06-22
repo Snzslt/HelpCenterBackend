@@ -264,18 +264,29 @@ exports.saveTeacherlanguageRequestList = async(req, res) => {
 exports.getTeacherRequestBylanguageId = async(req, res) => {
     let {
         languageListId,
+        teacherId,
     } = req.body;
-    const requestProgramList = await userModel.fetchTeacherProgramBylanguageId(languageListId);
+    let requestProgramList = await userModel.fetchTeacherProgramBylanguageId(languageListId);
     if (!requestProgramList) {
         return res.status(200).send({
             success: false,
             message: "requst program list not find",
         })
     }
+    newRequestProgramList = []
+    requestProgramList.map((program) => {
+        if (program.accept_teacher_id === teacherId && program.request_status === "accept") {
+            newRequestProgramList.push(program);
+        } else {
+            if (program.request_status !== "accept") {
+                newRequestProgramList.push(program);
+            }
+        }
+    });
     return res.status(200).send({
         success: true,
         message: "fetch requst program  List success",
-        programList: requestProgramList,
+        programList: newRequestProgramList,
 
     })
 

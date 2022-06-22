@@ -10,6 +10,7 @@ exports.saveUserData = async(data) => {
         role: data.type,
         is_active: "not_active",
         profile_status: "not_completed",
+        university_id: "",
     }
     let [results, fields] = await db.query("SELECT * FROM `users` WHERE email=? LIMIT 1", [data.email]);
     isValidNumber = results.length === 0;

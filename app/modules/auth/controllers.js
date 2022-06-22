@@ -33,7 +33,6 @@ exports.createUser = async(req, res) => {
 
     let validatData = validatonAuthData(registerData);
 
-
     if (validatData.isValid) {
         return res.status(200).send({
             success: false,
