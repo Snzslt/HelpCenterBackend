@@ -21,8 +21,7 @@ exports.createUser = async(req, res) => {
     registerData.email = email;
     registerData.password = password;
     registerData.repPassword = replacePassword;
-    registerData.type = userType,
-        console.log(registerData);
+    registerData.type = userType;
     let userData = Object.values(registerData);
     if (userData.indexOf(undefined) > -1) {
         return res.status(422).send({

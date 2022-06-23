@@ -5,7 +5,7 @@ let db = connection();
 exports.getUserListByAdminEmail = async(email, token) => {
     db = await connection();
     let [results, fields] = await db.query("SELECT * FROM `users` WHERE email=? And role='admin' And token=? LIMIT 1", [email, token]);
-    isValidNumber = results.length === 0;
+    isValidNumber = results.length > 0;
 
     if (isValidNumber) {
         let [results, fields] = await db.query("SELECT `id` ,`email`,`role`,`is_active`,`profile_status`,`first_name`,`last_name`,`gender`,`university_id` FROM `users` WHERE role !='admin' ", []);;
@@ -58,7 +58,7 @@ exports.updateTokenUser = async(email, token) => {
 exports.activeUserListById = async(adminEmail, token, id, email) => {
     const db = await connection();
     let [results_one, fields] = await db.query("SELECT * FROM `users` WHERE email=? And role='admin' And token=? LIMIT 1", [adminEmail, token]);
-    isValidNumber = results_one.length === 0;
+    isValidNumber = results_one.length > 0;
 
     if (isValidNumber) {
         let [results, fields] = await db.query("UPDATE `users` SET `is_active`='activated' WHERE id=? AND email=? LIMIT 1", [id, email]);
@@ -73,7 +73,7 @@ exports.activeUserListById = async(adminEmail, token, id, email) => {
 exports.deleteUserListById = async(adminEmail, token, id, email) => {
     const db = await connection();
     let [results_one, fields] = await db.query("SELECT * FROM `users` WHERE email=? And role='admin' And token=? LIMIT 1", [adminEmail, token]);
-    isValidNumber = results_one.length === 0;
+    isValidNumber = results_one.length > 0;
 
     if (isValidNumber) {
         let [results, fields] = await db.query("DELETE FROM `users` WHERE `id`=? AND`email`=?", [id, email]);
@@ -104,6 +104,16 @@ exports.getAllLanguages = async() => {
     return false;
 }
 
+exports.getAllStudys = async() => {
+    const db = await connection();
+    let [results_one, fields] = await db.query("SELECT * FROM `study`", []);
+    if (results_one.length > 0) {
+        return results_one;
+    }
+    return false;
+}
+
+
 exports.getAllProgramListById = async(id) => {
     const db = await connection();
     let [results_one, fields] = await db.query("SELECT * FROM `program_request` WHERE `student_id`=?", [id]);
@@ -124,7 +134,7 @@ exports.saveTeacherlanguageRequest = async(data) => {
     console.log("saveTeacherlanguageRequest data =>", data);
     const db = await connection();
     let [results_one, fields] = await db.query("SELECT * FROM `teacher_language_request` WHERE `request_id`=? LIMIT 1", [data.request_id]);
-    isValidNumber = results_one.length === 1;
+    isValidNumber = results_one.length > 1;
     console.log("saveTeacherlanguageRequest results_one =>", results_one);
     if (isValidNumber) {
         let [results, fields] = await db.query("UPDATE `teacher_language_request` SET `language_list_id`=? WHERE `request_id`=? LIMIT 1", [data.language_list_id, data.request_id]);
@@ -161,4 +171,13 @@ exports.changeProgramById = async(data, id) => {
         return false
     }
 
+}
+exports.deleteProgramRequestById = async(id) => {
+    const db = await connection();
+    let [results_one, fields] = await db.query("DELETE FROM `program_request` WHERE `id`=?", [id]);
+    if (results_one.affectedRows > 0) {
+        return true
+    } else {
+        return false
+    }
 }

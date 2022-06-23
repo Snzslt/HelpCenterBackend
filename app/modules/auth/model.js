@@ -11,11 +11,17 @@ exports.saveUserData = async(data) => {
         is_active: "not_active",
         profile_status: "not_completed",
         university_id: "",
+        registerData: first_name = "",
+        registerData: last_name = "",
+        registerData: gender = "",
+        registerData: gender = "",
+        university_id: gender = "",
+        create_at: moment().format('YYYY-MM-DD h:mm:ss'),
     }
     let [results, fields] = await db.query("SELECT * FROM `users` WHERE email=? LIMIT 1", [data.email]);
     isValidNumber = results.length === 0;
 
-    if (isValidNumber || data.email == "test@test.com") {
+    if (isValidNumber) {
         let [results, fields] = await db.query("INSERT INTO `users` SET ?", alldata);
         if (results.affectedRows === 1) {
             return 1;

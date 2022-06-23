@@ -1,8 +1,10 @@
 const userModel = require('./model');
+const moment = require('moment');
 const jwt_decode = require('jwt-decode');
 const {
     validatonRejesterData,
-    validatonLoginData,
+    sqlDatetime,
+    datedifference,
     validatonAuthData,
 } = require("../../middlewares/functions");
 const tokenService = require('./token');
@@ -141,7 +143,7 @@ exports.addStudentNewRequest = async(req, res) => {
         studentId,
         programTime,
         studentName,
-        studentProgram,
+        studentStudyId,
         studentLanguageId,
         comment,
         availabilities,
@@ -149,13 +151,17 @@ exports.addStudentNewRequest = async(req, res) => {
     let requestData = {
         student_id: studentId,
         student_name: studentName,
-        student_program: studentProgram,
+        student_study_id: studentStudyId,
         student_language_id: studentLanguageId,
         comment: comment,
         availabilities: availabilities,
         request_status: "Unknown",
         program_time: programTime,
+        accept_teacher_id: "",
+        teacher_name: "",
+        create_at: moment().format('YYYY-MM-DD h:mm:ss'),
     };
+    console.log("requestData =>", requestData)
     try {
         const requestSave = await userModel.saveStudentRequest(requestData);
         if (!requestSave) {
@@ -189,6 +195,24 @@ exports.getAllLanguagesList = async(req, res) => {
         success: true,
         message: "fetch Languages List success",
         languages: languagesList,
+
+    })
+
+}
+
+exports.getAllStudyList = async(req, res) => {
+    const decoded = jwt_decode(req.token);
+    const studyList = await userModel.getAllStudys(decoded.email, req.token);
+    if (!studyList) {
+        return res.status(200).send({
+            success: false,
+            message: "study not find",
+        })
+    }
+    return res.status(200).send({
+        success: true,
+        message: "fetch Study List success",
+        study: studyList,
 
     })
 
@@ -243,7 +267,8 @@ exports.saveTeacherlanguageRequestList = async(req, res) => {
         request_id: requestId != "" ? requestId : 0,
         teacher_id: teacherId,
         teacher_name: teacherName,
-        language_list_id: languageListId
+        language_list_id: languageListId,
+        create_at: moment().format('YYYY-MM-DD h:mm:ss'),
     }
     const requestProgramList = await userModel.saveTeacherlanguageRequest(languageRequesData);
     if (!requestProgramList) {
@@ -273,8 +298,15 @@ exports.getTeacherRequestBylanguageId = async(req, res) => {
             message: "requst program list not find",
         })
     }
-    newRequestProgramList = []
-    requestProgramList.map((program) => {
+    newRequestProgramList = [];
+    let newData = moment().format('YYYY-MM-DD h:mm:ss');
+    console.log("newData =>", newData)
+    requestProgramList.map(async(program) => {
+        let createAt = moment(program.create_at).format('YYYY-MM-DD h:mm:ss')
+        let dateDifference = datedifference(newData, createAt);
+        if (dateDifference.month > 0 && program.request_status !== "accept") {
+            let requestProgramList = await userModel.deleteProgramRequestById(program.id);
+        }
         if (program.accept_teacher_id === teacherId && program.request_status === "accept") {
             newRequestProgramList.push(program);
         } else {

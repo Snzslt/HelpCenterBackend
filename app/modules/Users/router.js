@@ -10,6 +10,7 @@ router.post('/user-activity', checkAuth, Users.userActivity);
 router.post('/delete-user', checkAuth, Users.deleteUser);
 router.post('/save-student-request', checkAuth, Users.addStudentNewRequest);
 router.post('/language-list', checkAuth, Users.getAllLanguagesList);
+router.post('/study-list', checkAuth, Users.getAllStudyList);
 router.post('/get-teacher-language-request-by-id', checkAuth, Users.getTeacherlanguageRequestById);
 router.post('/get-teacher-program', checkAuth, Users.getTeacherRequestBylanguageId);
 router.post('/save-teacher-language-list-Id', checkAuth, Users.saveTeacherlanguageRequestList);

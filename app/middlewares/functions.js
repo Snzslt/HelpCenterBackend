@@ -211,6 +211,21 @@ const validatonAuthData = (data) => {
 
 };
 
+const datedifference = (datefirst, dataLast) => {
+    console.log("datefirst, dataLast =>", datefirst, dataLast);
+    let dataOneArray = datefirst.split(" ")
+    let dataTwoArray = dataLast.split(" ")
+    let date1 = new Date(dataOneArray[0]);
+    let date2 = new Date(dataTwoArray[0]);
+    let dateDifference = new Date(date2.getTime() - date1.getTime());
+
+    return {
+        year: dateDifference.getUTCFullYear() - 1970,
+        month: dateDifference.getUTCMonth(),
+        day: dateDifference.getUTCDate() - 1,
+    }
+}
+
 
 
 
@@ -222,3 +237,4 @@ exports.IsValidFullName = IsValidFullName;
 exports.validatonRejesterData = validatonRejesterData;
 exports.validatonLoginData = validatonLoginData;
 exports.validatonAuthData = validatonAuthData;
+exports.datedifference = datedifference;
