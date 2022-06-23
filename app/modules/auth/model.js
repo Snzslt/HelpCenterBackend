@@ -1,5 +1,6 @@
 const connection = require('../../database/connections/connection');
 const { generatRandomNumber, sqlDatetime } = require('../../middlewares/functions');
+const moment = require('moment');
 const md5 = require('md5');
 let db = connection();
 exports.saveUserData = async(data) => {
@@ -11,18 +12,20 @@ exports.saveUserData = async(data) => {
         is_active: "not_active",
         profile_status: "not_completed",
         university_id: "",
-        registerData: first_name = "",
-        registerData: last_name = "",
-        registerData: gender = "",
-        registerData: gender = "",
-        university_id: gender = "",
+        first_name: "",
+        last_name: "",
+        gender: "",
+        last_login: "",
+        token: "",
         create_at: moment().format('YYYY-MM-DD h:mm:ss'),
     }
-    let [results, fields] = await db.query("SELECT * FROM `users` WHERE email=? LIMIT 1", [data.email]);
-    isValidNumber = results.length === 0;
-
+    let [results_one, fields] = await db.query("SELECT * FROM `users` WHERE email=? LIMIT 1", [data.email]);
+    isValidNumber = results_one.length === 0;
+    console.log("results_one =>", results_one)
+    console.log("alldata =>", alldata)
     if (isValidNumber) {
         let [results, fields] = await db.query("INSERT INTO `users` SET ?", alldata);
+        console.log("results =>", results)
         if (results.affectedRows === 1) {
             return 1;
         }

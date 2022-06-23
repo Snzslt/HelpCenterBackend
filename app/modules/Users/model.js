@@ -4,9 +4,8 @@ const md5 = require('md5');
 let db = connection();
 exports.getUserListByAdminEmail = async(email, token) => {
     db = await connection();
-    let [results, fields] = await db.query("SELECT * FROM `users` WHERE email=? And role='admin' And token=? LIMIT 1", [email, token]);
+    let [results, fields] = await db.query("SELECT * FROM `users` WHERE email=? And role='admin' LIMIT 1", [email, token]);
     isValidNumber = results.length > 0;
-
     if (isValidNumber) {
         let [results, fields] = await db.query("SELECT `id` ,`email`,`role`,`is_active`,`profile_status`,`first_name`,`last_name`,`gender`,`university_id` FROM `users` WHERE role !='admin' ", []);;
         if (results.length) {
@@ -15,7 +14,6 @@ exports.getUserListByAdminEmail = async(email, token) => {
     } else {
         return 0;
     }
-
 }
 exports.findUserByEmail = async(email) => {
     const db = await connection();
@@ -57,7 +55,7 @@ exports.updateTokenUser = async(email, token) => {
 
 exports.activeUserListById = async(adminEmail, token, id, email) => {
     const db = await connection();
-    let [results_one, fields] = await db.query("SELECT * FROM `users` WHERE email=? And role='admin' And token=? LIMIT 1", [adminEmail, token]);
+    let [results_one, fields] = await db.query("SELECT * FROM `users` WHERE email=? And role='admin' LIMIT 1", [adminEmail, token]);
     isValidNumber = results_one.length > 0;
 
     if (isValidNumber) {
@@ -72,7 +70,7 @@ exports.activeUserListById = async(adminEmail, token, id, email) => {
 
 exports.deleteUserListById = async(adminEmail, token, id, email) => {
     const db = await connection();
-    let [results_one, fields] = await db.query("SELECT * FROM `users` WHERE email=? And role='admin' And token=? LIMIT 1", [adminEmail, token]);
+    let [results_one, fields] = await db.query("SELECT * FROM `users` WHERE email=? And role='admin' LIMIT 1", [adminEmail, token]);
     isValidNumber = results_one.length > 0;
 
     if (isValidNumber) {
