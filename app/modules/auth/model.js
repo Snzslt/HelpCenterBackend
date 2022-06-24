@@ -15,20 +15,26 @@ exports.saveUserData = async(data) => {
         first_name: "",
         last_name: "",
         gender: "",
-        last_login: "",
-        token: "",
-        create_at: moment().format('YYYY-MM-DD h:mm:ss'),
+        //last_login: "",
+        //token: "",
+       // create_at: moment().format('YYYY-MM-DD h:mm:ss'),
+
     }
     let [results_one, fields] = await db.query("SELECT * FROM `users` WHERE email=? LIMIT 1", [data.email]);
     isValidNumber = results_one.length === 0;
     console.log("results_one =>", results_one)
-    console.log("alldata =>", alldata)
+    console.log(" isValidNumber=>", isValidNumber)
     if (isValidNumber) {
-        let [results, fields] = await db.query("INSERT INTO `users` SET ?", alldata);
+        console.log(" isValidNumber2=>", isValidNumber)
+        let [results, fields] = await db.query("INSERT INTO `users` SET ?", alldata,function(error,result){
+            console.log("error,result =>",error,result)
+        });
         console.log("results =>", results)
         if (results.affectedRows === 1) {
             return 1;
         }
+
+        
     } else {
         return 0;
     }
