@@ -225,7 +225,7 @@ exports.getAllStudentProgtamList = async(req, res) => {
     if (!requestProgramList) {
         return res.status(200).send({
             success: false,
-            message: "requst program list not find",
+            message: "request program list not find",
         })
     }
     return res.status(200).send({
@@ -250,7 +250,7 @@ exports.getTeacherlanguageRequestById = async(req, res) => {
     }
     return res.status(200).send({
         success: true,
-        message: "fetch requst program  List success",
+        message: "fetch request program  List success",
         ...requestProgramList,
 
     })
